@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>undetected gaming - Access Verification</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #e4e4e7;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated gradient background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.03) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.03) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 20%, rgba(59, 130, 246, 0.02) 0%, transparent 50%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Glass morphism effect */
+        .container {
+            position: relative;
+            z-index: 1;
+            background: rgba(24, 24, 27, 0.6);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 48px;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                        inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo h1 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            background: linear-gradient(135deg, #e4e4e7 0%, #a1a1aa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .logo .tagline {
+            font-size: 0.875rem;
+            color: #71717a;
+            font-weight: 500;
+        }
+
+        .status {
+            text-align: center;
+            margin-bottom: 28px;
+            padding: 12px 20px;
+            background: rgba(63, 63, 70, 0.3);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .status-text {
+            color: #a1a1aa;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .status-icon {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: #fbbf24;
+            border-radius: 50%;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .captcha-box {
+            background: rgba(39, 39, 42, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 0;
+        }
+
+        .captcha-challenge {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .captcha-challenge p {
+            color: #a1a1aa;
+            margin-bottom: 16px;
+            font-size: 0.9375rem;
+            font-weight: 500;
+        }
+
+        .code-display {
+            background: linear-gradient(135deg, rgba(24, 24, 27, 0.8) 0%, rgba(39, 39, 42, 0.6) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            font-size: 1.75rem;
+            letter-spacing: 12px;
+            text-align: center;
+            color: #e4e4e7;
+            user-select: none;
+            margin-bottom: 16px;
+            font-weight: 600;
+            border-radius: 12px;
+            font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2),
+                        inset 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .refresh-btn {
+            background: transparent;
+            border: none;
+            color: #71717a;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .refresh-btn:hover {
+            color: #a1a1aa;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        .input-group input {
+            width: 100%;
+            background: rgba(24, 24, 27, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #e4e4e7;
+            padding: 14px 16px;
+            font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+            font-size: 1rem;
+            border-radius: 12px;
+            text-align: center;
+            letter-spacing: 4px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: rgba(139, 92, 246, 0.5);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+            background: rgba(24, 24, 27, 0.8);
+        }
+
+        .input-group input::placeholder {
+            color: #52525b;
+            letter-spacing: 2px;
+            font-weight: 500;
+        }
+
+        .btn {
+            width: 100%;
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            border: none;
+            color: #ffffff;
+            padding: 14px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.9375rem;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            box-shadow: 0 10px 15px -3px rgba(139, 92, 246, 0.3),
+                        0 4px 6px -2px rgba(139, 92, 246, 0.2);
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(139, 92, 246, 0.4),
+                        0 10px 10px -5px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error {
+            color: #fca5a5;
+            text-align: center;
+            margin-top: 16px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 12px;
+            background: rgba(239, 68, 68, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        .success {
+            color: #86efac;
+            text-align: center;
+            margin-top: 16px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 12px;
+            background: rgba(34, 197, 94, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .loading {
+            text-align: center;
+            margin-top: 16px;
+            color: #a1a1aa;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s steps(3, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        /* Floating particles effect */
+        .particle {
+            position: fixed;
+            width: 3px;
+            height: 3px;
+            background: rgba(139, 92, 246, 0.4);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>undetected gaming</h1>
+            <div class="tagline">Security Verification Required</div>
+        </div>
+
+        <div class="status">
+            <div class="status-text">
+                <span class="status-icon"></span>
+                <span id="status-text">Verifying human authentication</span>
+            </div>
+        </div>
+
+        <div class="captcha-box">
+            <div class="captcha-challenge">
+                <p>Enter the security code below</p>
+                <div class="code-display" id="captcha-code"></div>
+                <button class="refresh-btn" id="refresh-btn" type="button">↻ Generate New Code</button>
+            </div>
+
+            <form id="captcha-form">
+                <div class="input-group">
+                    <input 
+                        type="text" 
+                        id="captcha-input" 
+                        placeholder="ENTER CODE"
+                        autocomplete="off"
+                        maxlength="6"
+                        required
+                    >
+                </div>
+                <button type="submit" class="btn" id="submit-btn">
+                    Verify Access
+                </button>
+            </form>
+
+            <div id="message"></div>
+        </div>
+    </div>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                document.body.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // Captcha logic
+        let currentCaptcha = '';
+        let isSubmitting = false;
+        let attempts = 0;
+        const maxAttempts = 5;
+
+        function generateCaptcha() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // Removed ambiguous chars
+            let code = '';
+            for (let i = 0; i < 6; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+
+        function displayCaptcha() {
+            currentCaptcha = generateCaptcha();
+            document.getElementById('captcha-code').textContent = currentCaptcha;
+            document.getElementById('captcha-input').value = '';
+            document.getElementById('message').innerHTML = '';
+            
+            // Reset submission state
+            isSubmitting = false;
+            document.getElementById('submit-btn').disabled = false;
+        }
+
+        // Initial captcha display
+        displayCaptcha();
+
+        // Refresh button
+        document.getElementById('refresh-btn').addEventListener('click', function() {
+            if (!isSubmitting) {
+                displayCaptcha();
+                document.getElementById('status-text').textContent = 'New code generated';
+            }
+        });
+
+        // Form submission with bug prevention
+        document.getElementById('captcha-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Prevent double submission
+            if (isSubmitting) {
+                return;
+            }
+
+            const input = document.getElementById('captcha-input').value.trim().toUpperCase();
+            const messageDiv = document.getElementById('message');
+            const submitBtn = document.getElementById('submit-btn');
+
+            // Validate input exists
+            if (!input) {
+                messageDiv.innerHTML = '<div class="error">Please enter the security code</div>';
+                return;
+            }
+
+            // Check if too many attempts
+            if (attempts >= maxAttempts) {
+                messageDiv.innerHTML = '<div class="error">Too many failed attempts. Resetting...</div>';
+                setTimeout(() => {
+                    attempts = 0;
+                    displayCaptcha();
+                    document.getElementById('status-text').textContent = 'System reset. Try again';
+                }, 2000);
+                return;
+            }
+
+            // Set submitting state
+            isSubmitting = true;
+            submitBtn.disabled = true;
+            messageDiv.innerHTML = '<div class="loading">Verifying</div>';
+
+            // Simulate verification delay
+            setTimeout(() => {
+                if (input === currentCaptcha) {
+                    messageDiv.innerHTML = '<div class="success">✓ Access granted</div>';
+                    document.getElementById('status-text').textContent = 'Authentication successful';
+                    
+                    // Redirect after success
+                    setTimeout(() => {
+                        // Replace this URL with your actual target page
+                        window.location.href = 'https://example.com/dashboard';
+                        // For testing, you could use: window.location.href = 'about:blank';
+                    }, 1500);
+                } else {
+                    attempts++;
+                    const remaining = maxAttempts - attempts;
+                    messageDiv.innerHTML = `<div class="error">Invalid code (${remaining} ${remaining === 1 ? 'attempt' : 'attempts'} remaining)</div>`;
+                    document.getElementById('status-text').textContent = 'Authentication failed';
+                    
+                    // Reset state for retry
+                    isSubmitting = false;
+                    submitBtn.disabled = false;
+                    
+                    // Auto-refresh captcha after failed attempt
+                    setTimeout(() => {
+                        displayCaptcha();
+                        document.getElementById('status-text').textContent = 'Verifying human authentication';
+                    }, 1500);
+                }
+            }, 1000);
+        });
+
+        // Auto-uppercase input
+        document.getElementById('captcha-input').addEventListener('input', function(e) {
+            e.target.value = e.target.value.toUpperCase();
+        });
+
+        // Prevent form resubmission on page reload
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+    </script>
+</body>
+</html>
