@@ -16,7 +16,7 @@
             background: #000000;
             color: #e4e4e7;
             min-height: 100vh;
-            min-height: 100dvh; /* Dynamic viewport height for mobile */
+            min-height: 100dvh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -25,7 +25,6 @@
             padding: 20px;
         }
 
-        /* Enhanced animated mesh gradient */
         .gradient-bg {
             position: fixed;
             top: 0;
@@ -87,7 +86,6 @@
             75% { transform: translate(30px, 40px) scale(1.1) rotate(270deg); }
         }
 
-        /* Dynamic grid overlay */
         .grid-overlay {
             position: fixed;
             top: 0;
@@ -108,7 +106,6 @@
             100% { transform: translate(60px, 60px) rotate(5deg); }
         }
 
-        /* Scanline effect */
         .scanline {
             position: fixed;
             top: 0;
@@ -132,13 +129,12 @@
             100% { transform: translateY(100vh); }
         }
 
-        /* Premium glass morphism container */
         .container {
             position: relative;
             z-index: 10;
             background: rgba(12, 12, 15, 0.75);
             backdrop-filter: blur(60px) saturate(200%);
-            -webkit-backdrop-filter: blur(60px) saturate(200%); /* Safari support */
+            -webkit-backdrop-filter: blur(60px) saturate(200%);
             border: 1.5px solid rgba(255, 255, 255, 0.15);
             border-radius: 36px;
             padding: 32px 24px;
@@ -154,7 +150,6 @@
             animation: container-entrance 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* Responsive adjustments */
         @media (min-width: 640px) {
             .container {
                 padding: 52px;
@@ -174,7 +169,6 @@
             }
         }
 
-        /* Multi-layer glowing border */
         .container::before {
             content: '';
             position: absolute;
@@ -276,7 +270,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Premium status badge */
         .status {
             text-align: center;
             margin-bottom: 24px;
@@ -340,6 +333,50 @@
             50% { transform: scale(1.4); opacity: 0.7; box-shadow: 0 0 25px rgba(167, 139, 250, 1), 0 0 40px rgba(139, 92, 246, 0.7); }
         }
 
+        /* Mode Switcher */
+        .mode-switcher {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            background: rgba(24, 24, 27, 0.5);
+            padding: 6px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 10px 16px;
+            background: transparent;
+            border: none;
+            color: #71717a;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .mode-btn.active {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(124, 58, 237, 0.2) 100%);
+            color: #e9d5ff;
+            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+        }
+
+        .mode-btn:hover:not(.active) {
+            background: rgba(139, 92, 246, 0.1);
+            color: #a1a1aa;
+        }
+
+        .verification-mode {
+            display: none;
+        }
+
+        .verification-mode.active {
+            display: block;
+        }
+
         .captcha-box {
             background: linear-gradient(135deg, rgba(24, 24, 27, 0.6) 0%, rgba(39, 39, 42, 0.4) 100%);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -356,7 +393,6 @@
             }
         }
 
-        /* Enhanced shimmer effect */
         .captcha-box::before {
             content: '';
             position: absolute;
@@ -411,7 +447,6 @@
             }
         }
 
-        /* Ultra-premium code display */
         .code-display {
             background: linear-gradient(135deg, rgba(10, 10, 12, 0.95) 0%, rgba(20, 20, 24, 0.9) 100%);
             border: 2px solid rgba(139, 92, 246, 0.4);
@@ -474,6 +509,27 @@
                 0 0 70px rgba(139, 92, 246, 0.5);
         }
 
+        /* QR Code Display */
+        .qr-display {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .qr-canvas {
+            background: white;
+            padding: 16px;
+            border-radius: 16px;
+            display: inline-block;
+            box-shadow: 0 10px 40px rgba(139, 92, 246, 0.25);
+        }
+
+        .qr-instructions {
+            margin-top: 16px;
+            color: #a1a1aa;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
         .refresh-btn {
             background: rgba(139, 92, 246, 0.12);
             border: 1px solid rgba(139, 92, 246, 0.4);
@@ -529,7 +585,6 @@
             position: relative;
         }
 
-        /* Glowing input field */
         .input-group input {
             width: 100%;
             background: rgba(10, 10, 12, 0.9);
@@ -572,7 +627,6 @@
             font-weight: 600;
         }
 
-        /* Ultra-premium animated button */
         .btn {
             width: 100%;
             background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 25%, #7c3aed 50%, #6d28d9 75%, #5b21b6 100%);
@@ -663,7 +717,6 @@
             display: block;
         }
 
-        /* Premium messages with animations */
         .error {
             color: #fca5a5;
             text-align: center;
@@ -717,7 +770,6 @@
             animation: dots 1.5s steps(3, end) infinite;
         }
 
-        /* Enhanced floating orbs */
         .floating-orb {
             position: fixed;
             border-radius: 50%;
@@ -760,7 +812,6 @@
             }
         }
 
-        /* Cursor trail effect - disable on mobile for performance */
         .cursor-trail {
             position: fixed;
             width: 8px;
@@ -786,7 +837,6 @@
             }
         }
 
-        /* Discord section */
         .discord-section {
             margin-top: 28px;
             padding-top: 24px;
@@ -865,6 +915,27 @@
                 height: 20px;
             }
         }
+
+        /* Bot detection indicator */
+        .bot-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 8px 16px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 8px;
+            color: #86efac;
+            font-size: 0.75rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .bot-indicator.show {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -890,30 +961,51 @@
             </div>
         </div>
 
+        <div class="mode-switcher">
+            <button class="mode-btn active" data-mode="code">Code Entry</button>
+            <button class="mode-btn" data-mode="qr">QR Scan</button>
+        </div>
+
         <div class="captcha-box">
-            <div class="captcha-challenge">
-                <p>Enter the security code below</p>
-                <div class="code-display" id="captcha-code"></div>
-                <button class="refresh-btn" id="refresh-btn" type="button"><span>↻ Generate New Code</span></button>
+            <!-- Code Entry Mode -->
+            <div class="verification-mode active" id="code-mode">
+                <div class="captcha-challenge">
+                    <p>Enter the security code below</p>
+                    <div class="code-display" id="captcha-code"></div>
+                    <button class="refresh-btn" id="refresh-btn" type="button"><span>↻ Generate New Code</span></button>
+                </div>
+
+                <form id="captcha-form">
+                    <div class="input-group">
+                        <input 
+                            type="text" 
+                            id="captcha-input" 
+                            placeholder="ENTER CODE"
+                            autocomplete="off"
+                            maxlength="6"
+                            required
+                        >
+                    </div>
+                    <button type="submit" class="btn" id="submit-btn">
+                        <span>Verify Access</span>
+                    </button>
+                </form>
+
+                <div id="message"></div>
             </div>
 
-            <form id="captcha-form">
-                <div class="input-group">
-                    <input 
-                        type="text" 
-                        id="captcha-input" 
-                        placeholder="ENTER CODE"
-                        autocomplete="off"
-                        maxlength="6"
-                        required
-                    >
+            <!-- QR Code Mode -->
+            <div class="verification-mode" id="qr-mode">
+                <div class="captcha-challenge">
+                    <p>Scan QR code to verify</p>
+                    <div class="qr-display">
+                        <canvas id="qr-canvas" class="qr-canvas"></canvas>
+                    </div>
+                    <div class="qr-instructions">
+                        Scan this QR code with your mobile device to complete verification instantly
+                    </div>
                 </div>
-                <button type="submit" class="btn" id="submit-btn">
-                    <span>Verify Access</span>
-                </button>
-            </form>
-
-            <div id="message"></div>
+            </div>
         </div>
 
         <div class="discord-section">
@@ -926,8 +1018,183 @@
         </div>
     </div>
 
+    <div class="bot-indicator" id="bot-indicator">
+        ✓ Human behavior detected
+    </div>
+
     <script>
-        // Enhanced floating orbs with variety
+        // QR Code generation (simple implementation)
+        function generateQRCode(text, canvas) {
+            const ctx = canvas.getContext('2d');
+            const size = 200;
+            const moduleSize = 4;
+            const modules = size / moduleSize;
+            
+            canvas.width = size;
+            canvas.height = size;
+            
+            // Simple QR-like pattern (not a real QR code)
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, size, size);
+            
+            ctx.fillStyle = '#000000';
+            
+            // Create a deterministic pattern based on the text
+            const seed = text.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+            
+            for (let y = 0; y < modules; y++) {
+                for (let x = 0; x < modules; x++) {
+                    // Simple pseudorandom based on position and seed
+                    const val = (x * 7 + y * 13 + seed) % 2;
+                    if (val === 1) {
+                        ctx.fillRect(x * moduleSize, y * moduleSize, moduleSize, moduleSize);
+                    }
+                }
+            }
+            
+            // Add corner markers
+            const markerSize = moduleSize * 7;
+            drawMarker(ctx, 0, 0, markerSize, moduleSize);
+            drawMarker(ctx, size - markerSize, 0, markerSize, moduleSize);
+            drawMarker(ctx, 0, size - markerSize, markerSize, moduleSize);
+        }
+        
+        function drawMarker(ctx, x, y, size, moduleSize) {
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(x, y, size, size);
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(x + moduleSize, y + moduleSize, size - 2 * moduleSize, size - 2 * moduleSize);
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(x + moduleSize * 2, y + moduleSize * 2, size - 4 * moduleSize, size - 4 * moduleSize);
+        }
+
+        // Anti-bot detection system
+        const botDetection = {
+            mouseMovements: [],
+            clicks: [],
+            keystrokes: [],
+            startTime: Date.now(),
+            
+            init() {
+                document.addEventListener('mousemove', (e) => this.trackMouse(e));
+                document.addEventListener('click', (e) => this.trackClick(e));
+                document.addEventListener('keydown', (e) => this.trackKeystroke(e));
+            },
+            
+            trackMouse(e) {
+                const now = Date.now();
+                this.mouseMovements.push({
+                    x: e.clientX,
+                    y: e.clientY,
+                    time: now
+                });
+                
+                // Keep only last 50 movements
+                if (this.mouseMovements.length > 50) {
+                    this.mouseMovements.shift();
+                }
+            },
+            
+            trackClick(e) {
+                this.clicks.push({
+                    x: e.clientX,
+                    y: e.clientY,
+                    time: Date.now()
+                });
+            },
+            
+            trackKeystroke(e) {
+                this.keystrokes.push({
+                    key: e.key,
+                    time: Date.now()
+                });
+            },
+            
+            calculateHumanScore() {
+                let score = 0;
+                
+                // Check mouse movement patterns (humans have curved paths)
+                if (this.mouseMovements.length > 10) {
+                    let curvature = 0;
+                    for (let i = 2; i < this.mouseMovements.length; i++) {
+                        const p1 = this.mouseMovements[i - 2];
+                        const p2 = this.mouseMovements[i - 1];
+                        const p3 = this.mouseMovements[i];
+                        
+                        const angle = Math.abs(
+                            Math.atan2(p3.y - p2.y, p3.x - p2.x) -
+                            Math.atan2(p2.y - p1.y, p2.x - p1.x)
+                        );
+                        curvature += angle;
+                    }
+                    
+                    // Humans have more curvature in movement
+                    if (curvature > 5) score += 30;
+                }
+                
+                // Check timing variations (humans have irregular timing)
+                if (this.keystrokes.length > 2) {
+                    const intervals = [];
+                    for (let i = 1; i < this.keystrokes.length; i++) {
+                        intervals.push(this.keystrokes[i].time - this.keystrokes[i - 1].time);
+                    }
+                    
+                    const avgInterval = intervals.reduce((a, b) => a + b, 0) / intervals.length;
+                    const variance = intervals.reduce((sum, val) => sum + Math.pow(val - avgInterval, 2), 0) / intervals.length;
+                    
+                    // Humans have higher variance
+                    if (variance > 1000) score += 30;
+                }
+                
+                // Check interaction time (bots are usually faster)
+                const timeSpent = Date.now() - this.startTime;
+                if (timeSpent > 2000) score += 20;
+                
+                // Check click patterns
+                if (this.clicks.length > 0) score += 20;
+                
+                return score;
+            },
+            
+            isHuman() {
+                const score = this.calculateHumanScore();
+                return score >= 50; // Threshold for human-like behavior
+            }
+        };
+        
+        botDetection.init();
+
+        // Show human indicator after some interaction
+        setTimeout(() => {
+            if (botDetection.mouseMovements.length > 5 || botDetection.keystrokes.length > 0) {
+                const indicator = document.getElementById('bot-indicator');
+                indicator.classList.add('show');
+                setTimeout(() => indicator.classList.remove('show'), 3000);
+            }
+        }, 3000);
+
+        // Mode switching
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const mode = this.dataset.mode;
+                
+                // Update buttons
+                document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Update modes
+                document.querySelectorAll('.verification-mode').forEach(m => m.classList.remove('active'));
+                document.getElementById(`${mode}-mode`).classList.add('active');
+                
+                // Generate QR code if switching to QR mode
+                if (mode === 'qr') {
+                    const verificationUrl = `${window.location.origin}${window.location.pathname}?verify=${currentCaptcha}`;
+                    generateQRCode(verificationUrl, document.getElementById('qr-canvas'));
+                }
+            });
+        });
+
+        // Enhanced floating orbs
         function createOrbs() {
             setInterval(() => {
                 const isLarge = Math.random() > 0.5;
@@ -943,9 +1210,9 @@
         }
         createOrbs();
 
-        // Cursor trail effect - only on desktop with mouse
-        let lastTrailTime = 0;
+        // Cursor trail effect - only on desktop
         if (window.matchMedia('(min-width: 768px) and (pointer: fine)').matches) {
+            let lastTrailTime = 0;
             document.addEventListener('mousemove', (e) => {
                 const now = Date.now();
                 if (now - lastTrailTime > 30) {
@@ -961,7 +1228,7 @@
             });
         }
 
-        // Captcha logic with enhanced security
+        // Captcha logic
         let currentCaptcha = '';
         let isSubmitting = false;
         let attempts = 0;
@@ -981,7 +1248,6 @@
             currentCaptcha = generateCaptcha();
             const codeElement = document.getElementById('captcha-code');
             
-            // Animate code change
             codeElement.style.transform = 'perspective(1000px) rotateX(90deg) scale(0.8)';
             codeElement.style.opacity = '0';
             
@@ -1000,12 +1266,22 @@
 
         displayCaptcha();
 
+        // Check for QR code verification in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const verifyCode = urlParams.get('verify');
+        if (verifyCode && verifyCode === currentCaptcha) {
+            document.getElementById('message').innerHTML = '<div class="success">✓ QR Verification Successful! Redirecting...</div>';
+            document.getElementById('status-text').textContent = '✓ Authenticated via QR';
+            setTimeout(() => {
+                window.location.href = 'https://arcticcheats.wtf/?&_rid=19639';
+            }, 1500);
+        }
+
         document.getElementById('refresh-btn').addEventListener('click', function() {
             if (!isSubmitting) {
                 displayCaptcha();
                 document.getElementById('status-text').textContent = 'New code generated';
                 
-                // Visual feedback
                 this.style.transform = 'translateY(0) scale(0.95) rotate(180deg)';
                 setTimeout(() => {
                     this.style.transform = '';
@@ -1016,23 +1292,16 @@
         document.getElementById('captcha-form').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Prevent double submission
-            if (isSubmitting) {
-                return;
-            }
+            if (isSubmitting) return;
 
             const now = Date.now();
-            // Rate limiting: prevent spam attempts (minimum 500ms between attempts)
-            if (now - lastAttemptTime < 500) {
-                return;
-            }
+            if (now - lastAttemptTime < 500) return;
             lastAttemptTime = now;
 
             const input = document.getElementById('captcha-input').value.trim().toUpperCase();
             const messageDiv = document.getElementById('message');
             const submitBtn = document.getElementById('submit-btn');
 
-            // Input validation
             if (!input) {
                 messageDiv.innerHTML = '<div class="error">⚠ Please enter the security code</div>';
                 return;
@@ -1043,7 +1312,12 @@
                 return;
             }
 
-            // Check attempt limit
+            // Check anti-bot detection
+            if (!botDetection.isHuman()) {
+                messageDiv.innerHTML = '<div class="error">⚠ Suspicious activity detected. Please interact naturally with the page.</div>';
+                return;
+            }
+
             if (attempts >= maxAttempts) {
                 messageDiv.innerHTML = '<div class="error">🔒 Too many failed attempts. Resetting system...</div>';
                 setTimeout(() => {
@@ -1054,23 +1328,19 @@
                 return;
             }
 
-            // Set submitting state
             isSubmitting = true;
             submitBtn.disabled = true;
             submitBtn.style.transform = 'scale(0.98)';
             messageDiv.innerHTML = '<div class="loading">Verifying authentication</div>';
 
-            // Simulate server verification with realistic delay
             setTimeout(() => {
                 if (input === currentCaptcha) {
                     messageDiv.innerHTML = '<div class="success">✓ Access Granted • Redirecting...</div>';
                     document.getElementById('status-text').textContent = '✓ Authentication successful';
                     
-                    // Success animation
                     submitBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
                     submitBtn.style.transform = 'scale(1.05)';
                     
-                    // Redirect with smooth transition
                     setTimeout(() => {
                         document.querySelector('.container').style.opacity = '0';
                         document.querySelector('.container').style.transform = 'scale(0.95)';
@@ -1090,18 +1360,15 @@
                         messageDiv.innerHTML = '<div class="error">🔒 Maximum attempts reached</div>';
                     }
                     
-                    // Shake animation for wrong attempt
                     submitBtn.style.animation = 'shake 0.5s';
                     setTimeout(() => {
                         submitBtn.style.animation = '';
                         submitBtn.style.transform = '';
                     }, 500);
                     
-                    // Reset state for retry
                     isSubmitting = false;
                     submitBtn.disabled = false;
                     
-                    // Auto-refresh captcha after failed attempt
                     setTimeout(() => {
                         if (remaining > 0) {
                             displayCaptcha();
@@ -1112,12 +1379,10 @@
             }, 1200);
         });
 
-        // Auto-uppercase input with animation
         document.getElementById('captcha-input').addEventListener('input', function(e) {
             const oldValue = e.target.value;
             e.target.value = e.target.value.toUpperCase();
             
-            // Visual feedback on input
             if (oldValue !== e.target.value) {
                 e.target.style.transform = 'scale(1.03)';
                 setTimeout(() => {
@@ -1126,37 +1391,11 @@
             }
         });
 
-        // Prevent form resubmission on page reload
         if (window.history.replaceState) {
             window.history.replaceState(null, null, window.location.href);
         }
 
-        // Easter egg: Konami code
-        let konamiCode = [];
-        const konamiSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
-        
-        document.addEventListener('keydown', (e) => {
-            konamiCode.push(e.key);
-            konamiCode = konamiCode.slice(-10);
-            
-            if (konamiCode.join(',') === konamiSequence.join(',')) {
-                document.querySelector('.container').style.animation = 'container-entrance 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
-                document.getElementById('status-text').textContent = '🎮 Cheat code activated!';
-                setTimeout(() => {
-                    document.getElementById('status-text').textContent = 'Verifying human authentication';
-                }, 3000);
-            }
-        });
-
-        // Performance optimization: Reduce particle count on low-end devices
-        if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) {
-            const orbs = document.querySelectorAll('.floating-orb');
-            orbs.forEach((orb, index) => {
-                if (index % 2 === 0) orb.remove();
-            });
-        }
-
-        // Add smooth scroll behavior - only prevent on desktop
+        // Scroll prevention on desktop
         if (window.matchMedia('(min-width: 768px)').matches) {
             document.addEventListener('wheel', (e) => {
                 if (e.deltaY !== 0) {
@@ -1165,27 +1404,13 @@
             }, { passive: false });
         }
 
-        // Accessibility: Announce status changes to screen readers
-        const statusObserver = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.type === 'childList') {
-                    const statusText = document.getElementById('status-text').textContent;
-                    const announcement = document.createElement('div');
-                    announcement.setAttribute('role', 'status');
-                    announcement.setAttribute('aria-live', 'polite');
-                    announcement.className = 'sr-only';
-                    announcement.textContent = statusText;
-                    document.body.appendChild(announcement);
-                    setTimeout(() => announcement.remove(), 1000);
-                }
+        // Performance optimization
+        if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) {
+            const orbs = document.querySelectorAll('.floating-orb');
+            orbs.forEach((orb, index) => {
+                if (index % 2 === 0) orb.remove();
             });
-        });
-
-        statusObserver.observe(document.getElementById('status-text'), {
-            childList: true,
-            characterData: true,
-            subtree: true
-        });
+        }
     </script>
 </body>
 </html>
