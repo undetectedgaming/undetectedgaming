@@ -270,6 +270,46 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Location Badge */
+        .location-badge {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.05) 100%);
+            border-radius: 100px;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            display: inline-block;
+            animation: fade-in 1s ease 0.5s both;
+        }
+
+        .location-badge.suspicious {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.05) 100%);
+            border-color: rgba(239, 68, 68, 0.3);
+            animation: pulse-warning 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-warning {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            50% { transform: scale(1.02); box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+        }
+
+        .location-text {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .location-badge:not(.suspicious) .location-text {
+            color: #93c5fd;
+        }
+
+        .location-badge.suspicious .location-text {
+            color: #fca5a5;
+        }
+
         .status {
             text-align: center;
             margin-bottom: 24px;
@@ -330,10 +370,10 @@
 
         @keyframes pulse-dot {
             0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 15px rgba(167, 139, 250, 1); }
-            50% { transform: scale(1.4); opacity: 0.7; box-shadow: 0 0 25px rgba(167, 139, 250, 1), 0 0 40px rgba(139, 92, 246, 0.7);             }
+            50% { transform: scale(1.4); opacity: 0.7; box-shadow: 0 0 25px rgba(167, 139, 250, 1), 0 0 40px rgba(139, 92, 246, 0.7); }
         }
 
-        /* Bot detection indicator */
+        .captcha-box {
             background: linear-gradient(135deg, rgba(24, 24, 27, 0.6) 0%, rgba(39, 39, 42, 0.4) 100%);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 24px;
@@ -403,6 +443,22 @@
             }
         }
 
+        .difficulty-indicator {
+            margin-top: 12px;
+            font-size: 0.75rem;
+            color: #71717a;
+            font-weight: 600;
+        }
+
+        .difficulty-indicator.hard {
+            color: #fbbf24;
+        }
+
+        .difficulty-indicator.extreme {
+            color: #f87171;
+            animation: pulse-warning 2s ease-in-out infinite;
+        }
+
         .code-display {
             background: linear-gradient(135deg, rgba(10, 10, 12, 0.95) 0%, rgba(20, 20, 24, 0.9) 100%);
             border: 2px solid rgba(139, 92, 246, 0.4);
@@ -463,6 +519,16 @@
             text-shadow: 
                 0 0 40px rgba(139, 92, 246, 0.9),
                 0 0 70px rgba(139, 92, 246, 0.5);
+        }
+
+        /* Honeypot field - hidden from humans */
+        .hp-field {
+            position: absolute;
+            left: -9999px;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            pointer-events: none;
         }
 
         .refresh-btn {
@@ -851,7 +917,6 @@
             }
         }
 
-        /* Bot detection indicator */
         .bot-indicator {
             position: fixed;
             bottom: 20px;
@@ -871,6 +936,12 @@
         .bot-indicator.show {
             opacity: 1;
         }
+
+        .bot-indicator.warning {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
     </style>
 </head>
 <body>
@@ -889,6 +960,15 @@
             <div class="tagline">Security Verification Required</div>
         </div>
 
+        <div style="text-align: center;">
+            <div class="location-badge" id="location-badge">
+                <div class="location-text">
+                    <span id="location-icon">📍</span>
+                    <span id="location-text">Detecting location...</span>
+                </div>
+            </div>
+        </div>
+
         <div class="status">
             <div class="status-text">
                 <span class="status-icon"></span>
@@ -900,17 +980,20 @@
             <div class="captcha-challenge">
                 <p>Enter the security code below</p>
                 <div class="code-display" id="captcha-code"></div>
+                <div class="difficulty-indicator" id="difficulty-indicator"></div>
                 <button class="refresh-btn" id="refresh-btn" type="button"><span>↻ Generate New Code</span></button>
             </div>
 
             <form id="captcha-form">
+                <!-- Honeypot field - bots will fill this -->
+                <input type="text" name="email" class="hp-field" tabindex="-1" autocomplete="off">
+                
                 <div class="input-group">
                     <input 
                         type="text" 
                         id="captcha-input" 
                         placeholder="ENTER CODE"
                         autocomplete="off"
-                        maxlength="6"
                         required
                     >
                 </div>
@@ -937,17 +1020,124 @@
     </div>
 
     <script>
-        // Anti-bot detection system
+        // Device fingerprinting
+        const deviceFingerprint = {
+            userAgent: navigator.userAgent,
+            platform: navigator.platform,
+            language: navigator.language,
+            screenResolution: `${screen.width}x${screen.height}`,
+            colorDepth: screen.colorDepth,
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            cores: navigator.hardwareConcurrency || 'unknown',
+            memory: navigator.deviceMemory || 'unknown',
+            touchSupport: 'ontouchstart' in window,
+            
+            generateFingerprint() {
+                const data = `${this.userAgent}|${this.platform}|${this.screenResolution}|${this.timezone}`;
+                let hash = 0;
+                for (let i = 0; i < data.length; i++) {
+                    const char = data.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash;
+                }
+                return Math.abs(hash).toString(16);
+            }
+        };
+
+        const fingerprintId = deviceFingerprint.generateFingerprint();
+        console.log('Device Fingerprint:', fingerprintId);
+
+        // Location detection using IP geolocation
+        let userLocation = {
+            city: 'Unknown',
+            country: 'Unknown',
+            isSuspicious: false
+        };
+
+        async function detectLocation() {
+            try {
+                const response = await fetch('https://ipapi.co/json/');
+                const data = await response.json();
+                
+                userLocation = {
+                    city: data.city || 'Unknown',
+                    country: data.country_name || 'Unknown',
+                    countryCode: data.country_code || 'XX',
+                    ip: data.ip,
+                    isSuspicious: checkSuspiciousLocation(data)
+                };
+                
+                updateLocationDisplay();
+            } catch (error) {
+                console.log('Location detection failed:', error);
+                userLocation = {
+                    city: 'Unknown',
+                    country: 'Unknown',
+                    isSuspicious: false
+                };
+                updateLocationDisplay();
+            }
+        }
+
+        function checkSuspiciousLocation(data) {
+            // List of countries/regions commonly used for VPN/proxy
+            const suspiciousCountries = ['RU', 'CN', 'KP', 'IR'];
+            
+            // Check if it's a known VPN/proxy
+            if (data.org && (
+                data.org.toLowerCase().includes('vpn') ||
+                data.org.toLowerCase().includes('proxy') ||
+                data.org.toLowerCase().includes('hosting')
+            )) {
+                return true;
+            }
+            
+            // Check country code
+            if (suspiciousCountries.includes(data.country_code)) {
+                return true;
+            }
+            
+            return false;
+        }
+
+        function updateLocationDisplay() {
+            const badge = document.getElementById('location-badge');
+            const icon = document.getElementById('location-icon');
+            const text = document.getElementById('location-text');
+            
+            if (userLocation.isSuspicious) {
+                badge.classList.add('suspicious');
+                icon.textContent = '⚠️';
+                text.textContent = `Suspicious location: ${userLocation.city}, ${userLocation.country}`;
+            } else {
+                icon.textContent = '📍';
+                text.textContent = `Logging in from: ${userLocation.city}, ${userLocation.country}`;
+            }
+        }
+
+        // Initialize location detection
+        detectLocation();
+
+        // Enhanced anti-bot detection system
         const botDetection = {
             mouseMovements: [],
             clicks: [],
             keystrokes: [],
             startTime: Date.now(),
+            suspicionScore: 0,
+            honeypotTriggered: false,
             
             init() {
                 document.addEventListener('mousemove', (e) => this.trackMouse(e));
                 document.addEventListener('click', (e) => this.trackClick(e));
                 document.addEventListener('keydown', (e) => this.trackKeystroke(e));
+                
+                // Monitor honeypot field
+                document.querySelector('.hp-field').addEventListener('input', () => {
+                    this.honeypotTriggered = true;
+                    this.suspicionScore += 100;
+                    this.showBotWarning();
+                });
             },
             
             trackMouse(e) {
@@ -958,7 +1148,6 @@
                     time: now
                 });
                 
-                // Keep only last 50 movements
                 if (this.mouseMovements.length > 50) {
                     this.mouseMovements.shift();
                 }
@@ -982,7 +1171,12 @@
             calculateHumanScore() {
                 let score = 0;
                 
-                // Check mouse movement patterns (humans have curved paths)
+                // Honeypot check
+                if (this.honeypotTriggered) {
+                    return -100; // Instant fail
+                }
+                
+                // Mouse movement patterns
                 if (this.mouseMovements.length > 10) {
                     let curvature = 0;
                     for (let i = 2; i < this.mouseMovements.length; i++) {
@@ -997,11 +1191,11 @@
                         curvature += angle;
                     }
                     
-                    // Humans have more curvature in movement
                     if (curvature > 5) score += 30;
+                    else this.suspicionScore += 20;
                 }
                 
-                // Check timing variations (humans have irregular timing)
+                // Keystroke rhythm
                 if (this.keystrokes.length > 2) {
                     const intervals = [];
                     for (let i = 1; i < this.keystrokes.length; i++) {
@@ -1011,38 +1205,53 @@
                     const avgInterval = intervals.reduce((a, b) => a + b, 0) / intervals.length;
                     const variance = intervals.reduce((sum, val) => sum + Math.pow(val - avgInterval, 2), 0) / intervals.length;
                     
-                    // Humans have higher variance
                     if (variance > 1000) score += 30;
+                    else if (avgInterval < 50) this.suspicionScore += 30; // Too fast
                 }
                 
-                // Check interaction time (bots are usually faster)
+                // Interaction time
                 const timeSpent = Date.now() - this.startTime;
                 if (timeSpent > 2000) score += 20;
+                else if (timeSpent < 500) this.suspicionScore += 40; // Too quick
                 
-                // Check click patterns
+                // Click patterns
                 if (this.clicks.length > 0) score += 20;
                 
-                return score;
+                // Suspicious location adds to score
+                if (userLocation.isSuspicious) {
+                    this.suspicionScore += 30;
+                }
+                
+                return score - this.suspicionScore;
             },
             
             isHuman() {
                 const score = this.calculateHumanScore();
-                return score >= 50; // Threshold for human-like behavior
+                return score >= 30;
+            },
+            
+            showBotWarning() {
+                const indicator = document.getElementById('bot-indicator');
+                indicator.textContent = '⚠ Bot-like behavior detected';
+                indicator.classList.add('warning');
+                indicator.classList.add('show');
             }
         };
         
         botDetection.init();
 
-        // Show human indicator after some interaction
+        // Show human indicator
         setTimeout(() => {
             if (botDetection.mouseMovements.length > 5 || botDetection.keystrokes.length > 0) {
-                const indicator = document.getElementById('bot-indicator');
-                indicator.classList.add('show');
-                setTimeout(() => indicator.classList.remove('show'), 3000);
+                if (botDetection.isHuman()) {
+                    const indicator = document.getElementById('bot-indicator');
+                    indicator.classList.add('show');
+                    setTimeout(() => indicator.classList.remove('show'), 3000);
+                }
             }
         }, 3000);
 
-        // Enhanced floating orbs
+        // Floating orbs
         function createOrbs() {
             setInterval(() => {
                 const isLarge = Math.random() > 0.5;
@@ -1058,7 +1267,7 @@
         }
         createOrbs();
 
-        // Cursor trail effect - only on desktop
+        // Cursor trail - desktop only
         if (window.matchMedia('(min-width: 768px) and (pointer: fine)').matches) {
             let lastTrailTime = 0;
             document.addEventListener('mousemove', (e) => {
@@ -1076,6 +1285,39 @@
             });
         }
 
+        // Dynamic difficulty system
+        let currentDifficulty = 'normal';
+        let captchaLength = 6;
+        let includeSpecialChars = false;
+
+        function increaseDifficulty() {
+            if (currentDifficulty === 'normal') {
+                currentDifficulty = 'hard';
+                captchaLength = 8;
+                includeSpecialChars = false;
+                updateDifficultyIndicator();
+            } else if (currentDifficulty === 'hard') {
+                currentDifficulty = 'extreme';
+                captchaLength = 10;
+                includeSpecialChars = true;
+                updateDifficultyIndicator();
+            }
+        }
+
+        function updateDifficultyIndicator() {
+            const indicator = document.getElementById('difficulty-indicator');
+            if (currentDifficulty === 'normal') {
+                indicator.textContent = '';
+                indicator.className = 'difficulty-indicator';
+            } else if (currentDifficulty === 'hard') {
+                indicator.textContent = '⚠ Difficulty increased to HARD';
+                indicator.className = 'difficulty-indicator hard';
+            } else if (currentDifficulty === 'extreme') {
+                indicator.textContent = '🔥 EXTREME difficulty activated';
+                indicator.className = 'difficulty-indicator extreme';
+            }
+        }
+
         // Captcha logic
         let currentCaptcha = '';
         let isSubmitting = false;
@@ -1084,9 +1326,13 @@
         let lastAttemptTime = 0;
 
         function generateCaptcha() {
-            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            if (includeSpecialChars) {
+                chars += '!@#$%&*';
+            }
+            
             let code = '';
-            for (let i = 0; i < 6; i++) {
+            for (let i = 0; i < captchaLength; i++) {
                 code += chars.charAt(Math.floor(Math.random() * chars.length));
             }
             return code;
@@ -1095,6 +1341,10 @@
         function displayCaptcha() {
             currentCaptcha = generateCaptcha();
             const codeElement = document.getElementById('captcha-code');
+            const input = document.getElementById('captcha-input');
+            
+            input.maxLength = captchaLength;
+            input.placeholder = 'ENTER CODE';
             
             codeElement.style.transform = 'perspective(1000px) rotateX(90deg) scale(0.8)';
             codeElement.style.opacity = '0';
@@ -1105,7 +1355,7 @@
                 codeElement.style.opacity = '1';
             }, 200);
             
-            document.getElementById('captcha-input').value = '';
+            input.value = '';
             document.getElementById('message').innerHTML = '';
             
             isSubmitting = false;
@@ -1144,14 +1394,19 @@
                 return;
             }
 
-            if (input.length !== 6) {
-                messageDiv.innerHTML = '<div class="error">⚠ Code must be 6 characters</div>';
+            if (input.length !== captchaLength) {
+                messageDiv.innerHTML = `<div class="error">⚠ Code must be ${captchaLength} characters</div>`;
                 return;
             }
 
-            // Check anti-bot detection
+            // Anti-bot checks
             if (!botDetection.isHuman()) {
+                botDetection.showBotWarning();
                 messageDiv.innerHTML = '<div class="error">⚠ Suspicious activity detected. Please interact naturally with the page.</div>';
+                
+                // Increase difficulty for suspected bots
+                increaseDifficulty();
+                displayCaptcha();
                 return;
             }
 
@@ -1159,6 +1414,10 @@
                 messageDiv.innerHTML = '<div class="error">🔒 Too many failed attempts. Resetting system...</div>';
                 setTimeout(() => {
                     attempts = 0;
+                    currentDifficulty = 'normal';
+                    captchaLength = 6;
+                    includeSpecialChars = false;
+                    updateDifficultyIndicator();
                     displayCaptcha();
                     document.getElementById('status-text').textContent = 'System reset. Try again';
                 }, 2500);
@@ -1189,6 +1448,11 @@
                 } else {
                     attempts++;
                     const remaining = maxAttempts - attempts;
+                    
+                    // Increase difficulty after 2 failed attempts
+                    if (attempts >= 2 && currentDifficulty === 'normal') {
+                        increaseDifficulty();
+                    }
                     
                     if (remaining > 0) {
                         messageDiv.innerHTML = `<div class="error">✗ Invalid Code • ${remaining} ${remaining === 1 ? 'attempt' : 'attempts'} remaining</div>`;
